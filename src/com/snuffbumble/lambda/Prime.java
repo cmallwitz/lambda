@@ -9,7 +9,7 @@ public class Prime {
         timed( () -> numbersUpToN( 4_000_000, getIteratorBasedStream(false)) );
         timed( () -> numbersUpToN( 4_000_000, getRangeBasedStream(false)) );
 
-        timed( () -> primesUpToN ( 4_00_000, getIteratorBasedStream(false)) );
+        timed( () -> primesUpToN ( 4_000_000, getIteratorBasedStream(false)) );
         timed( () -> primesUpToN ( 4_000_000, getIteratorBasedStream(true)) );
         timed( () -> primesUpToN ( 4_000_000, getRangeBasedStream(true)) );
 
