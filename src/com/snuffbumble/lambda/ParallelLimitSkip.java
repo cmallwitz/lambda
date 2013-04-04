@@ -37,7 +37,6 @@ public class ParallelLimitSkip {
     }
 
     public static Stream<Long> getArrayBasedStream(boolean parallel) {
-
         Long[] list = new Long[n];
         for(int i=0; i<n; i++) { list[i] = i+1L; }
         return parallel ? Arrays.asList(list).parallelStream() : Arrays.asList(list).stream();
