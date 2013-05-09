@@ -1,5 +1,6 @@
 package com.snuffbumble.lambda;
 
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.Streams;
 
@@ -7,15 +8,15 @@ public class Prime {
 
     public static void main(String[] args) {
         timed( () -> numbersUpToN( 4_000_000, getIteratorBasedStream(false)) );
-        timed( () -> numbersUpToN( 4_000_000, getRangeBasedStream(false)) );
+        timed( () -> numbersUpToN( 4_000_000, getRangeBasedStream(true, 4_000_000L)) );
 
         timed( () -> primesUpToN ( 4_000_000, getIteratorBasedStream(false)) );
         timed( () -> primesUpToN ( 4_000_000, getIteratorBasedStream(true)) );
-        timed( () -> primesUpToN ( 4_000_000, getRangeBasedStream(true)) );
+        timed( () -> primesUpToN ( 4_000_000, getRangeBasedStream(true, 4_000_000L)) );
 
         timed( () -> firstNPrimes(   283_147, getIteratorBasedStream(false)) );
+        timed( () -> firstNPrimes(   283_147, getRangeBasedStream(true, 4_000_000L)) );
         timed( () -> firstNPrimes(   283_147, getIteratorBasedStream(true)) );
-        timed( () -> firstNPrimes(   283_147, getRangeBasedStream(true)) );
     }
 
     public static void numbersUpToN(int n, Stream<Long> stream) {
@@ -24,7 +25,8 @@ public class Prime {
                         stream
                                 .limit(n)
                                 .map(e -> 1L)
-                                .reduce(0L, (count, t) -> count + 1L, (countLeft, countRight) -> countLeft + countRight)));
+                                .count()));
+                                //.reduce(0L, (count, t) -> count + 1L, (countLeft, countRight) -> countLeft + countRight)));
     }
 
     public static void primesUpToN(int n, Stream<Long> stream) {
@@ -42,17 +44,18 @@ public class Prime {
                         stream
                                 .filter(Prime::isPrime)
                                 .limit(n) // limit after primality test
-                                .reduce(0L, (count, t) -> count + 1L, (countLeft, countRight) -> countLeft + countRight)));
+                                .count()));
+                                //.reduce(0L, (count, t) -> count + 1L, (countLeft, countRight) -> countLeft + countRight)));
     }
 
     // create stream - either serial or parallel
     public static Stream<Long> getIteratorBasedStream(boolean parallel) {
-        Stream<Long> s = Streams.iterate(1L, n -> n + 1L);
+        Stream<Long> s = LongStream.iterate(1L, n -> n + 1L).boxed();
         return parallel ? s.parallel() : s;
     }
 
-    public static Stream<Long> getRangeBasedStream(boolean parallel) {
-        Stream<Long> s = Streams.longRange(1L, 10_000_000L).boxed();
+    public static Stream<Long> getRangeBasedStream(boolean parallel, long n) {
+        Stream<Long> s = LongStream.range(1L, n + 1).boxed();
         return parallel ? s.parallel() : s;
     }
 

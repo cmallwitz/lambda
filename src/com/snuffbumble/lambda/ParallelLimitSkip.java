@@ -20,7 +20,7 @@ public class ParallelLimitSkip {
 
         System.out.println("sequential count after skip(10) : " + getArrayBasedStream(false)
                 .filter(l -> l%2==0) // filter even numbers
-                .substream(10)
+                .substream(10) // skip
                 .count());
     }
 
@@ -32,7 +32,7 @@ public class ParallelLimitSkip {
 
         System.out.println("parallel   count after skip(10) : " + getArrayBasedStream(true)
                 .filter(l -> l % 2 == 0) // filter even numbers
-                .substream(10)
+                .substream(10) // skip
                 .count());
     }
 
